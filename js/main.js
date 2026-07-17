@@ -137,39 +137,95 @@
 document.addEventListener('DOMContentLoaded', () => {
     const btnSend = document.getElementById('btn-send-money');
     const methodSelect = document.getElementById('game-method');
+    const amountInput = document.getElementById('game-amount');
+    const countrySelect = document.getElementById('game-country');
     const statusText = document.getElementById('game-status');
     const feesBar = document.getElementById('game-fees');
     const recipientBar = document.getElementById('game-recipient');
     const timeValue = document.getElementById('game-time-value');
+    const savingsBox = document.getElementById('game-savings');
 
     if(btnSend) {
         btnSend.addEventListener('click', () => {
             const method = methodSelect.value;
-            statusText.innerText = 'Sending ...';
+            let amount = parseFloat(amountInput.value);
+            if (isNaN(amount) || amount <= 0) amount = 200;
+
+            const countryName = countrySelect.options[countrySelect.selectedIndex].text;
+            
+            // 9% traditional vs 1.5% Remitly
+            const tradFeeRate = 0.09;
+            const remitlyFeeRate = 0.015;
+            
+            statusText.innerText = 'Sending to ' + countryName + '...';
             feesBar.style.width = '0%';
             feesBar.innerText = '';
             recipientBar.style.width = '100%';
             recipientBar.innerText = 'Sending...';
             timeValue.innerText = '0 hours';
+            savingsBox.style.display = 'none';
             
             setTimeout(() => {
                 if(method === 'traditional') {
-                    statusText.innerText = 'Transfer Complete (Traditional)';
+                    const fee = amount * tradFeeRate;
+                    const received = amount - fee;
+                    statusText.innerText = `Transfer Complete (Traditional to ${countryName})`;
                     feesBar.style.width = '9%';
-                    feesBar.innerText = '-';
+                    feesBar.innerText = `-$${fee.toFixed(2)}`;
                     recipientBar.style.width = '91%';
-                    recipientBar.innerText = 'Received: ';
+                    recipientBar.innerText = `Received: $${received.toFixed(2)}`;
                     timeValue.innerText = '72 hours (3 Days)';
+                    savingsBox.style.display = 'block';
+                    savingsBox.innerHTML = `💸 Traditional fees are eating <strong>$${fee.toFixed(2)}</strong>! Remitly could save you <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong> and deliver in minutes.`;
                 } else {
-                    statusText.innerText = 'Transfer Complete (Digital/Remitly)';
+                    const fee = amount * remitlyFeeRate;
+                    const received = amount - fee;
+                    statusText.innerText = `Transfer Complete (Remitly to ${countryName})`;
                     feesBar.style.width = '1.5%';
-                    feesBar.innerText = '-';
+                    feesBar.innerText = `-$${fee.toFixed(2)}`;
                     recipientBar.style.width = '98.5%';
-                    recipientBar.innerText = 'Received: ';
+                    recipientBar.innerText = `Received: $${received.toFixed(2)}`;
                     timeValue.innerText = 'Minutes';
+                    savingsBox.style.display = 'block';
+                    savingsBox.innerHTML = `🚀 <strong>Remitly Magic!</strong> You saved <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong> and <strong>almost 3 days</strong> compared to traditional methods!`;
                 }
             }, 600);
         });
+    }
+
+    // STATUS TODAY KPI COUNTER ANIMATION
+    const kpiObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const els = entry.target.querySelectorAll('[data-count], [data-count-decimal]');
+                els.forEach(el => {
+                    const isDecimal = el.hasAttribute('data-count-decimal');
+                    const target = parseFloat(isDecimal ? el.getAttribute('data-count-decimal') : el.getAttribute('data-count'));
+                    const duration = 1500;
+                    const stepTime = 30;
+                    const steps = duration / stepTime;
+                    const increment = target / steps;
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                            kpiObserver.unobserve(entry.target);
+                        }
+                        // Keep any non-numeric text like '$' or 'M+' intact in the original HTML, just replace the inner text of the span? 
+                        // Actually, the span ONLY contains the number in our HTML setup (e.g. <span>0</span>)
+                        el.innerText = isDecimal ? current.toFixed(1) : Math.floor(current);
+                    }, stepTime);
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+
+    const kpiGrid = document.querySelector('.kpi-grid');
+    if (kpiGrid) {
+        kpiObserver.observe(kpiGrid);
     }
 });
 
