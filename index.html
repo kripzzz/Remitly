@@ -1,112 +1,204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remitly — Decoded</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <!-- CDNs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-</head>
-<body>
-    <!-- Background Elements -->
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Remitly — Decoded: an interactive fintech case study about remittance friction, founders, economics, global scale, and company status." />
+    <meta name="theme-color" content="#26134d" />
+    <title>Remitly — Decoded | Interactive Fintech Case Study</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+    <script src="js/charts.js" defer></script>
+    <script src="js/animations.js" defer></script>
+    <script src="js/qrcode.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the story</a>
+    <div class="grain" aria-hidden="true"></div>
 
-    <div id="skip-animation-toggle" class="skip-animation-toggle" style="background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2);">
-        <label>
-            <input type="checkbox" id="skip-animation"> Skip Animations
-        </label>
-    </div>
-    
-    <nav id="navbar" class="hidden">
-        <div class="nav-content">
-            <a href="#" class="home-btn" id="home-link">← Home</a>
-            <div class="progress-bar-container">
-                <div class="progress-steps">
-                    <span class="step" data-step="1">1</span>
-                    <span class="step" data-step="2">2</span>
-                    <span class="step" data-step="3">3</span>
-                    <span class="step" data-step="4">4</span>
-                    <span class="step" data-step="5">5</span>
-                </div>
-            </div>
-            <button id="nav-share-btn" class="share-btn">Share</button>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Remitly Decoded home">
+        <span class="brand-mark">R:</span>
+        <span>Remitly <em>Decoded</em></span>
+      </a>
+      <nav class="chapter-progress" aria-label="Chapter progress">
+        <a href="#friction" data-progress="friction"><span>01</span><b>Friction</b></a>
+        <a href="#founders" data-progress="founders"><span>02</span><b>Founders</b></a>
+        <a href="#business-model" data-progress="business-model"><span>03</span><b>Model</b></a>
+        <a href="#geography" data-progress="geography"><span>04</span><b>Scale</b></a>
+        <a href="#status-today" data-progress="status-today"><span>05</span><b>Today</b></a>
+      </nav>
+      <button class="motion-toggle" type="button" aria-pressed="false">Skip motion</button>
+    </header>
+
+    <main id="main">
+      <section class="home-view is-active" id="home" data-view="home">
+        <div class="hero-map" aria-hidden="true">
+          <svg viewBox="0 0 1200 620" role="img">
+            <path class="land" d="M73 183l86-60 98 9 49 48-37 59-70 6-31 49-74-12-48-54zm278 209 48-55 65 21 35 69-33 116-45-8-29-88zm141-250 90-53 128 5 51 42 91-11 88 63-38 72-96 2-67 61-76-18-49-55-93-20zm292 230 76-33 64 21 12 56-56 37-80-20zm178-180 80-34 87 29 31 61-64 37-78-19-50-48z" />
+            <path class="route route-a" d="M198 214 Q430 42 654 215" />
+            <path class="route route-b" d="M654 215 Q858 102 1037 245" />
+            <path class="route route-c" d="M198 214 Q420 500 845 404" />
+            <circle class="map-dot" cx="198" cy="214" r="8" />
+            <circle class="map-dot delay" cx="654" cy="215" r="8" />
+            <circle class="map-dot delay-2" cx="1037" cy="245" r="8" />
+            <circle class="map-dot delay-3" cx="845" cy="404" r="8" />
+          </svg>
         </div>
-    </nav>
 
-    <!-- Main View (Home) -->
-    <main id="home-view" class="view active">
-        <header class="hero">
-            <div class="hero-bg" id="hero-bg">
-                <!-- GSAP Particle/Map Network will be drawn here -->
-            </div>
-            <div class="hero-content">
-                <h1 class="gradient-text">Remitly: Decoding the Problem</h1>
-                <p>A cinematic fintech case study tracing the journey from high friction to a multi-billion dollar global network.</p>
-            </div>
-        </header>
+        <div class="hero-copy">
+          <p class="eyebrow">An interactive fintech case study · 2011—2026</p>
+          <h1>How do you fix a problem that’s been broken for <em>generations?</em></h1>
+          <p class="hero-deck">Follow one painful transfer from a Nairobi insight to a public, global payments network.</p>
+          <a class="scroll-cue" href="#chapters"><span>Open the case file</span><i aria-hidden="true">↓</i></a>
+        </div>
 
-        <section class="chapter-cards-container">
-            <div class="chapter-grid" id="chapter-grid">
-                <!-- Chapter cards injected dynamically via JS -->
-            </div>
-        </section>
-        
-        <footer>
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3 class="gradient-text">About this project</h3>
-                    <p>Built for a business-school / finance-student audience as an interactive case study.</p>
-                    <p>Content drawn from public company/press sources (Remitly newsroom, SEC filings). Built by AI / Developer.</p>
-                </div>
-                <div class="footer-share">
-                    <div id="footer-qrcode"></div>
-                    <button id="footer-copy-btn">Copy Link</button>
-                </div>
-            </div>
-        </footer>
+        <div class="chapter-index" id="chapters">
+          <header class="index-heading">
+            <p class="eyebrow">Five chapters · two layers each</p>
+            <h2>Choose where the story opens.</h2>
+          </header>
+          <div class="card-grid">
+            <a class="chapter-card card-friction" href="#friction" data-slug="friction">
+              <span class="card-number">01 / Origin</span>
+              <svg class="card-icon" viewBox="0 0 160 130" aria-hidden="true"><path d="M40 15h80l18 25-12 72-94 4L18 42z"/><path d="M32 36l96 20M51 18l-9 96M87 15l20 98"/><path class="accent" d="M50 73h58M48 89h42"/></svg>
+              <div><h3>The Friction</h3><p>A transfer should feel like a promise—not a gamble.</p></div>
+              <span class="open-label">Unfold the problem <i>↗</i></span>
+            </a>
+            <a class="chapter-card card-founders" href="#founders" data-slug="founders">
+              <span class="card-number">02 / People</span>
+              <svg class="card-icon" viewBox="0 0 160 130" aria-hidden="true"><path d="M80 12c-25 0-45 18-45 41 0 16 9 29 23 36l3 22h38l3-22c14-7 23-20 23-36 0-23-20-41-45-41z"/><path class="accent" d="M63 54l12 12 25-29M64 118h32"/></svg>
+              <div><h3>The Founder(s)</h3><p>One observed problem became a three-founder mission.</p></div>
+              <span class="open-label">Meet the builders <i>↗</i></span>
+            </a>
+            <a class="chapter-card card-business" href="#business-model" data-slug="business-model">
+              <span class="card-number">03 / Economics</span>
+              <svg class="card-icon" viewBox="0 0 160 130" aria-hidden="true"><circle cx="46" cy="65" r="27"/><circle cx="114" cy="65" r="27"/><path d="M73 65h14"/><path class="accent" d="M80 47v36M68 56l12-9 12 9M68 74l12 9 12-9"/></svg>
+              <div><h3>The Business Model</h3><p>Two small slices of every transfer built a large network.</p></div>
+              <span class="open-label">Follow the money <i>↗</i></span>
+            </a>
+            <a class="chapter-card card-geography" href="#geography" data-slug="geography">
+              <span class="card-number">04 / Network</span>
+              <svg class="card-icon" viewBox="0 0 160 130" aria-hidden="true"><circle cx="80" cy="65" r="50"/><path d="M30 65h100M80 15c19 18 28 34 28 50s-9 32-28 50c-19-18-28-34-28-50s9-32 28-50z"/><path class="accent" d="M112 28c13 0 23 10 23 23 0 18-23 37-23 37S89 69 89 51c0-13 10-23 23-23z"/></svg>
+              <div><h3>Geography &amp; Scale</h3><p>A Seattle pin became a six-continent payments network.</p></div>
+              <span class="open-label">Map the expansion <i>↗</i></span>
+            </a>
+            <a class="chapter-card card-status" href="#status-today" data-slug="status-today">
+              <span class="card-number">05 / Now</span>
+              <svg class="card-icon" viewBox="0 0 160 130" aria-hidden="true"><path d="M16 68h35l11-29 20 58 18-47 11 18h33"/><path class="accent" d="M80 19c28-30 68-4 60 29-8 34-60 67-60 67S28 82 20 48c-8-33 32-59 60-29z"/></svg>
+              <div><h3>Status Today</h3><p>The heartbeat changed rhythm; it did not slow down.</p></div>
+              <span class="open-label">Read the vital signs <i>↗</i></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter-view" id="friction" data-view="friction" aria-labelledby="friction-title">
+        <header class="chapter-mast"><p>Chapter 01 · The original problem</p><h1 id="friction-title">The Friction</h1></header>
+        <div class="story-stage paper-stage">
+          <div class="paper-sheet">
+            <span class="pain pain-a">HIGH FEES</span><span class="pain pain-b">3+ DAYS</span><span class="pain pain-c">NO TRACKING</span><span class="pain pain-d">UNRELIABLE</span>
+            <div class="fee-gauge"><strong><span data-count="9">0</span>%</strong><div><i></i></div><small>illustrative historical industry cost</small></div>
+          </div>
+          <div class="stage-caption"><p class="eyebrow">The old experience</p><h2>Money left home. Certainty didn’t travel with it.</h2></div>
+        </div>
+        <button class="explore-button" data-explore="friction"><span>Explore the details</span><i>+</i></button>
+        <div class="deep-dive" data-deep-dive="friction">
+          <div class="editorial-copy"><p class="kicker">Why this mattered</p><div data-content-slot="friction"></div>
+            <ul class="pain-list"><li><b>Opaque cost</b><span>Flat fees and exchange-rate markups stacked together.</span></li><li><b>Slow settlement</b><span>Critical support could take days to arrive.</span></li><li><b>Thin access</b><span>Reliable payout locations varied sharply by corridor.</span></li><li><b>Low trust</b><span>Senders often could not see where the money was.</span></li></ul>
+          </div>
+          <figure class="chart-panel"><figcaption><span>Illustrative cost comparison</span><b>Share of a $200 transfer</b></figcaption><canvas id="costChart"></canvas><small>Industry-general teaching ranges, not Remitly-specific pricing.</small></figure>
+        </div>
+      </section>
+
+      <section class="chapter-view" id="founders" data-view="founders" aria-labelledby="founders-title">
+        <header class="chapter-mast"><p>Chapter 02 · The people</p><h1 id="founders-title">The Founder(s)</h1></header>
+        <div class="story-stage comic-stage">
+          <article class="comic-panel"><span>01 · Nairobi, 2010</span><div class="avatar single">MO</div><p>“People are working too hard for sending money to feel this broken.”</p></article>
+          <article class="comic-panel"><span>02 · The idea</span><div class="idea-bulb">!</div><p>What if trust—not just speed—was the product?</p></article>
+          <article class="comic-panel"><span>03 · Idaho → Seattle</span><div class="avatar-group"><i>MO</i><i>JH</i><i>SG</i></div><p>Problem insight meets product and engineering.</p></article>
+          <article class="comic-panel"><span>04 · May 2011</span><div class="mini-laptop">BeamIt<br />Mobile</div><p>A comparison idea becomes a direct service.</p></article>
+          <article class="comic-panel"><span>05 · August 2012</span><div class="rebrand-word">Remitly</div><p>A new name for a bigger mission.</p></article>
+        </div>
+        <button class="explore-button" data-explore="founders"><span>Explore the details</span><i>+</i></button>
+        <div class="deep-dive founders-dive" data-deep-dive="founders">
+          <div class="editorial-copy"><p class="kicker">A three-part founding team</p><div data-content-slot="founders"></div><blockquote>Fall in love with a problem you want to solve, not the solution.</blockquote></div>
+          <div class="founder-grid" id="founderGrid" aria-label="Interactive founder cards"></div>
+        </div>
+      </section>
+
+      <section class="chapter-view" id="business-model" data-view="business-model" aria-labelledby="business-title">
+        <header class="chapter-mast"><p>Chapter 03 · The economics</p><h1 id="business-title">The Business Model</h1></header>
+        <div class="story-stage flow-stage">
+          <svg viewBox="0 0 1100 430" role="img" aria-label="A transfer flowing from sender through Remitly to recipient">
+            <path class="flow-line fee-line" d="M190 210 C350 60 420 80 540 176"/><path class="flow-line fx-line" d="M190 210 C350 360 420 340 540 244"/><path class="flow-line payout-line" d="M620 210 C770 210 820 210 930 210"/>
+            <g class="flow-node sender-node"><circle cx="145" cy="210" r="68"/><text x="145" y="205">SENDER</text><text class="small" x="145" y="229">pays</text></g>
+            <g class="flow-node remitly-node"><circle cx="580" cy="210" r="76"/><text x="580" y="205">REMITLY</text><text class="small" x="580" y="229">routes</text></g>
+            <g class="flow-node recipient-node"><circle cx="975" cy="210" r="68"/><text x="975" y="205">RECIPIENT</text><text class="small" x="975" y="229">receives</text></g>
+            <text class="flow-label" x="340" y="89">TRANSACTION FEE</text><text class="flow-label" x="346" y="347">FX SPREAD</text><text class="flow-label" x="762" y="190">DISPLAYED AMOUNT</text>
+          </svg>
+          <div class="stage-caption"><p class="eyebrow">Two core streams</p><h2>A fee for the route. A spread on the exchange.</h2></div>
+        </div>
+        <button class="explore-button" data-explore="business-model"><span>Explore the details</span><i>+</i></button>
+        <div class="deep-dive business-dive" data-deep-dive="business-model">
+          <div class="editorial-copy"><p class="kicker">Who pays—and how</p><div data-content-slot="business-model"></div><div class="product-roadmap"><span><b>One</b>Membership</span><span><b>Flex</b>Credit</span><span><b>Wallet</b>Stored value</span><span><b>Business</b>B2B payments</span></div></div>
+          <div class="chart-stack"><figure class="chart-panel"><figcaption><span>Illustrative historical mix</span><b>Core revenue streams</b></figcaption><canvas id="revenueMixChart"></canvas></figure><figure class="chart-panel wide"><figcaption><span>Revenue trajectory</span><b>USD millions</b></figcaption><canvas id="revenueGrowthChart"></canvas><small>Q1 2026 is annualized for visual comparison; not guidance.</small></figure></div>
+        </div>
+      </section>
+
+      <section class="chapter-view" id="geography" data-view="geography" aria-labelledby="geography-title">
+        <header class="chapter-mast"><p>Chapter 04 · The network</p><h1 id="geography-title">Geography &amp; Scale</h1></header>
+        <div class="story-stage geo-stage">
+          <svg viewBox="0 0 1100 500" role="img" aria-label="Stylized world map showing Remitly growth from Seattle">
+            <path class="geo-land" d="M58 153l113-76 109 18 52 61-42 67-88 4-38 67-92-22-36-68zm292 207 57-74 72 30 37 77-42 91-60-18-36-62zm179-249 110-64 130 4 61 51 81-8 116 69-47 76-106 12-72 74-95-27-45-62-105-25zm320 249 78-31 70 26 11 61-65 42-78-27z"/>
+            <g class="geo-pin pin-seattle" transform="translate(190 155)"><circle r="12"/><circle class="ring" r="20"/><text x="18" y="-8">SEATTLE</text></g>
+            <g class="geo-pin pin-europe" transform="translate(640 145)"><circle r="10"/><text x="16" y="-6">UK / EU</text></g>
+            <g class="geo-pin pin-uae" transform="translate(746 244)"><circle r="10"/><text x="16" y="-6">UAE</text></g>
+            <g class="geo-pin pin-asia" transform="translate(906 235)"><circle r="10"/><text x="16" y="-6">175+ COUNTRIES</text></g>
+            <path class="geo-route" d="M190 155 Q400 25 640 145 T906 235"/>
+          </svg>
+          <div class="year-counter"><span>2011</span><b>→</b><strong>2026</strong></div>
+          <div class="stage-caption"><p class="eyebrow">From one city outward</p><h2>Global scale arrived one trusted corridor at a time.</h2></div>
+        </div>
+        <button class="explore-button" data-explore="geography"><span>Explore the details</span><i>+</i></button>
+        <div class="deep-dive geography-dive" data-deep-dive="geography">
+          <div class="editorial-copy"><p class="kicker">A global payout fabric</p><div data-content-slot="geography"></div><div class="scale-strip"><span><b>175+</b>countries</span><span><b>100+</b>currencies</span><span><b>9M+</b>active customers</span><span><b>~3,200</b>people</span></div></div>
+          <figure class="chart-panel"><figcaption><span>Customer scale</span><b>Approximate active customers, millions</b></figcaption><canvas id="customerChart"></canvas><small>Selected public milestones; intermediate years are illustrative.</small></figure>
+        </div>
+      </section>
+
+      <section class="chapter-view" id="status-today" data-view="status-today" aria-labelledby="status-title">
+        <header class="chapter-mast"><p>Chapter 05 · The vital signs</p><h1 id="status-title">Status Today</h1></header>
+        <div class="story-stage ecg-stage">
+          <svg viewBox="0 0 1200 410" role="img" aria-label="Heartbeat timeline showing major company milestones">
+            <path class="ecg-grid" d="M0 82h1200M0 164h1200M0 246h1200M0 328h1200M120 0v410M240 0v410M360 0v410M480 0v410M600 0v410M720 0v410M840 0v410M960 0v410M1080 0v410"/>
+            <path class="ecg-line" d="M0 245h130l25-30 26 30h150l22-96 34 174 35-78h150l24-48 28 48h144l24-115 35 196 37-81h156"/>
+            <g class="ecg-labels"><text x="150" y="190">IPO · 2021</text><text x="520" y="174">PROFIT · Q1 2025</text><text x="815" y="104">NEW CEO · FEB 2026</text><text x="960" y="355">RECORD Q1</text></g>
+          </svg>
+          <div class="stage-caption"><p class="eyebrow">Still operating. Still evolving.</p><h2>The founder era ended. The platform era began.</h2></div>
+        </div>
+        <button class="explore-button" data-explore="status-today"><span>Explore the details</span><i>+</i></button>
+        <div class="deep-dive status-dive" data-deep-dive="status-today">
+          <div class="editorial-copy"><p class="kicker">A mature fintech inflection</p><div data-content-slot="status-today"></div></div>
+          <div class="kpi-grid"><article><span>Market cap*</span><strong data-count-decimal="4.6">$0B</strong></article><article><span>Active customers</span><strong data-count="9">0M+</strong></article><article><span>Countries reached</span><strong data-count="175">0+</strong></article><article><span>FY2025 revenue</span><strong data-count-decimal="1.6">$0B</strong></article><article><span>Employees</span><strong data-count="3200">0</strong></article></div>
+          <aside class="share-block"><div><p class="eyebrow">Pass the case forward</p><h3>Share the story</h3><p>Scan the code or copy this page’s live URL.</p><button class="copy-link" type="button">Copy link</button></div><div class="qr-code" data-qr aria-label="QR code for this website"></div></aside>
+        </div>
+      </section>
     </main>
 
-    <!-- Chapter Detail View -->
-    <div id="chapter-view" class="view">
-        <div class="story-container" id="story-container">
-            <!-- Animated story teaser injected here -->
-        </div>
-        
-        <div class="expand-prompt" id="expand-prompt">
-            <button id="expand-btn">Explore the details ↓</button>
-        </div>
+    <button class="floating-home" type="button" aria-label="Return to home">⌂</button>
+    <button class="floating-share" type="button" aria-label="Open share section">▦</button>
 
-        <div class="deep-dive-container hidden" id="deep-dive-container">
-            <!-- Full text and data visualization injected here -->
-        </div>
-    </div>
-
-    <!-- Modals for Share -->
-    <div id="share-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="modal-close-btn">&times;</span>
-            <h2 class="gradient-text">Share this Case Study</h2>
-            <div id="modal-qrcode" style="margin-top:20px; margin-bottom:20px;"></div>
-            <button id="modal-copy-btn">Copy Link</button>
-        </div>
-    </div>
-
-    <!-- JS Scripts -->
-    <script src="js/animations.js"></script>
-    <script src="js/charts.js"></script>
-    <script src="js/qrcode.js"></script>
-    <script src="js/main.js"></script>
-</body>
+    <footer class="site-footer">
+      <div><p class="eyebrow">About this project</p><h2>A classroom case study,<br />built to be opened.</h2></div>
+      <div class="footer-notes"><p>Content is paraphrased from public company materials, investor relations releases, SEC filings, and founder interviews. Illustrative figures are labeled; market data should be rechecked before academic submission.</p><p>Suggested source trail: Remitly newsroom and about pages; Remitly investor relations; SEC filings; GeekWire; Wharton FinTech; Authority Magazine; Nasdaq and public-market aggregators.</p><p class="credit">Built as an original educational experience · No official logo or founder photography used.</p></div>
+      <div class="footer-share"><div class="qr-code qr-code-small" data-qr aria-label="QR code for this website"></div><button class="copy-link" type="button">Copy live link</button></div>
+    </footer>
+  </body>
 </html>

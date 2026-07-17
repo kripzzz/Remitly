@@ -1,240 +1,133 @@
-// Application State
-const state = {
-    content: null,
-    currentChapter: null
-};
+(() => {
+  const chapterSlugs = ["friction", "founders", "business-model", "geography", "status-today"];
+  const state = { content: null, current: "home", completed: new Set(JSON.parse(localStorage.getItem("remitly-completed") || "[]")) };
 
-// DOM Elements
-const homeView = document.getElementById('home-view');
-const chapterView = document.getElementById('chapter-view');
-const chapterGrid = document.getElementById('chapter-grid');
-const navbar = document.getElementById('navbar');
-const homeLink = document.getElementById('home-link');
-const expandBtn = document.getElementById('expand-btn');
-const expandPrompt = document.getElementById('expand-prompt');
-const deepDiveContainer = document.getElementById('deep-dive-container');
-const storyContainer = document.getElementById('story-container');
-const skipAnimationToggle = document.getElementById('skip-animation');
+  async function fetchJson(url) {
+    const response = await fetch(url, { headers: { accept: "application/json" } });
+    if (!response.ok) throw new Error(`${url} returned ${response.status}`);
+    return response.json();
+  }
 
-// Share Modal Elements
-const shareBtn = document.getElementById('nav-share-btn');
-const shareModal = document.getElementById('share-modal');
-const modalCloseBtn = document.getElementById('modal-close-btn');
-
-// Initialize Application
-async function init() {
-    await fetchContent();
-    renderHomeCards();
-    handleRouting();
-    setupEventListeners();
-    
-    // Listen to hash changes for routing
-    window.addEventListener('hashchange', handleRouting);
-}
-
-// Fetch Content (Try API, fallback to JSON)
-async function fetchContent() {
+  async function loadContent() {
+    const fallback = await fetchJson("data/content.json");
     try {
-        const response = await fetch('/api/content');
-        if (!response.ok) throw new Error('API not available');
-        const data = await response.json();
-        state.content = data;
-    } catch (error) {
-        console.log('Falling back to static content.json');
-        try {
-            const res = await fetch('data/content.json');
-            state.content = await res.json();
-        } catch (e) {
-            console.error('Failed to load content:', e);
-            document.body.innerHTML = '<h1 style="color:white; text-align:center; margin-top:20vh;">Error loading content</h1>';
-        }
+      const [chapters, founders, revenue, milestones] = await Promise.all([
+        fetchJson("/api/content"), fetchJson("/api/founders"), fetchJson("/api/revenue"), fetchJson("/api/milestones")
+      ]);
+      return { chapters: chapters.chapters, founders: founders.founders, revenue: revenue.revenue, milestones: milestones.milestones };
+    } catch {
+      document.documentElement.dataset.contentSource = "static-fallback";
+      return fallback;
     }
-}
+  }
 
-// Render Chapter Cards on Home View
-function renderHomeCards() {
-    if (!state.content || !state.content.chapters) return;
-    
-    chapterGrid.innerHTML = state.content.chapters.map(chapter => `
-        <a href="#${chapter.slug}" class="chapter-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
-            <div class="icon-container">
-                ${chapter.icon}
-            </div>
-            <span>Chapter ${chapter.order_index}</span>
-            <h3>${chapter.title}</h3>
-            <p>${chapter.teaser_text}</p>
-        </a>
-    `).join('');
+  function renderContent(data) {
+    data.chapters.forEach((chapter) => {
+      const slot = document.querySelector(`[data-content-slot="${chapter.slug}"]`);
+      if (slot) slot.innerHTML = chapter.deepDiveHtml;
+    });
 
-    // Initialize VanillaTilt on the newly created cards
-    if (window.VanillaTilt) {
-        VanillaTilt.init(document.querySelectorAll(".chapter-card"));
-    }
-}
+    const founderGrid = document.querySelector("#founderGrid");
+    founderGrid.innerHTML = data.founders.map((founder) => {
+      const initials = founder.name.split(" ").map((part) => part[0]).join("");
+      return `<article class="founder-card" tabindex="0" role="button" aria-label="Flip ${founder.name} card" aria-pressed="false">
+        <div class="founder-face founder-front"><span class="initials">${initials}</span><h3>${founder.name}</h3><p>${founder.role}</p><small>Tap to flip ↻</small></div>
+        <div class="founder-face founder-back"><p class="eyebrow">Background</p><p>${founder.background}</p><p class="eyebrow">Connection to the problem</p><p>${founder.personalConnection}</p><small>Tap to return ↻</small></div>
+      </article>`;
+    }).join("");
 
-// Routing Logic
-function handleRouting() {
-    const hash = window.location.hash.replace('#', '');
-    
-    if (!hash || hash === 'home') {
-        showHomeView();
+    founderGrid.querySelectorAll(".founder-card").forEach((card) => {
+      const flip = () => {
+        card.classList.toggle("is-flipped");
+        card.setAttribute("aria-pressed", String(card.classList.contains("is-flipped")));
+      };
+      card.addEventListener("click", flip);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); flip(); }
+      });
+    });
+  }
+
+  function updateProgress(slug) {
+    document.querySelectorAll("[data-progress]").forEach((link) => {
+      link.classList.toggle("is-active", link.dataset.progress === slug);
+      link.classList.toggle("is-complete", state.completed.has(link.dataset.progress));
+    });
+  }
+
+  function route() {
+    const requested = location.hash.replace("#", "") || "home";
+    const indexAnchor = requested === "chapters";
+    const slug = chapterSlugs.includes(requested) ? requested : "home";
+    state.current = slug;
+    document.querySelectorAll("[data-view]").forEach((view) => view.classList.toggle("is-active", view.dataset.view === slug));
+    document.body.classList.toggle("in-chapter", slug !== "home");
+    updateProgress(slug);
+    if (indexAnchor) {
+      requestAnimationFrame(() => document.querySelector("#chapters").scrollIntoView({ behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth" }));
     } else {
-        const chapter = state.content.chapters.find(c => c.slug === hash);
-        if (chapter) {
-            showChapterView(chapter);
-        } else {
-            showHomeView();
-        }
+      window.scrollTo({ top: 0, behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth" });
     }
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+    if (slug !== "home") window.runChapterAnimation?.(slug);
+    document.title = slug === "home" ? "Remitly — Decoded | Interactive Fintech Case Study" : `${document.querySelector(`#${slug} h1`).textContent} | Remitly — Decoded`;
+  }
 
-// View Transitions
-function showHomeView() {
-    state.currentChapter = null;
-    chapterView.classList.remove('active');
-    
-    setTimeout(() => {
-        chapterView.style.display = 'none';
-        homeView.style.display = 'block';
-        
-        // Slight delay to allow display block to render before opacity transition
-        setTimeout(() => {
-            homeView.classList.add('active');
-            
-            // Re-trigger hero animation on return
-            if (window.Animations && window.Animations.playHeroBackground) {
-                window.Animations.playHeroBackground();
-            }
-            
-            // Stagger cards in
-            gsap.fromTo('.chapter-card', 
-                { y: 50, opacity: 0 }, 
-                { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power3.out", clearProps: "all" }
-            );
-
-        }, 50);
-        navbar.classList.add('hidden');
-    }, 600);
-}
-
-function showChapterView(chapter) {
-    state.currentChapter = chapter;
-    
-    // Update navbar progress
-    updateProgress(chapter.order_index);
-    navbar.classList.remove('hidden');
-    
-    // Reset Deep Dive State
-    expandPrompt.classList.remove('hidden');
-    deepDiveContainer.classList.add('hidden');
-    deepDiveContainer.classList.remove('visible');
-    
-    // Populate Content
-    deepDiveContainer.innerHTML = chapter.deep_dive_html;
-    injectDynamicContent(chapter);
-    
-    homeView.classList.remove('active');
-    setTimeout(() => {
-        homeView.style.display = 'none';
-        chapterView.style.display = 'block';
-        setTimeout(() => chapterView.classList.add('active'), 50);
-        
-        // Trigger Story Teaser Animation
-        if (window.Animations && window.Animations.playTeaser) {
-            const skip = skipAnimationToggle.checked;
-            window.Animations.playTeaser(chapter.slug, skip);
+  function setupExploreButtons() {
+    document.querySelectorAll("[data-explore]").forEach((button) => {
+      button.setAttribute("aria-expanded", "false");
+      button.addEventListener("click", () => {
+        const slug = button.dataset.explore;
+        const panel = document.querySelector(`[data-deep-dive="${slug}"]`);
+        const isOpen = panel.classList.toggle("is-open");
+        button.setAttribute("aria-expanded", String(isOpen));
+        button.querySelector("span").textContent = isOpen ? "Close the details" : "Explore the details";
+        if (isOpen) {
+          state.completed.add(slug);
+          localStorage.setItem("remitly-completed", JSON.stringify([...state.completed]));
+          updateProgress(slug);
+          window.initCharts?.(state.content, slug);
+          requestAnimationFrame(() => panel.scrollIntoView({ behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth", block: "start" }));
+          window.animateCounters?.(panel);
         }
-    }, 600);
-}
-
-function updateProgress(currentIndex) {
-    document.querySelectorAll('.step').forEach((stepEl, idx) => {
-        const stepNum = idx + 1;
-        stepEl.className = 'step'; // reset
-        if (stepNum < currentIndex) {
-            stepEl.classList.add('completed');
-        } else if (stepNum === currentIndex) {
-            stepEl.classList.add('active');
-        }
+      });
     });
-}
+  }
 
-// Inject Dynamic Content (Founders, charts initialization)
-function injectDynamicContent(chapter) {
-    if (chapter.slug === 'founders' && state.content.founders) {
-        const container = deepDiveContainer.querySelector('#founderCardsContainer');
-        if (container) {
-            container.innerHTML = state.content.founders.map(f => `
-                <div class="founder-card" data-tilt data-tilt-max="5" data-tilt-speed="300" data-tilt-glare data-tilt-max-glare="0.1">
-                    <h4>${f.name}</h4>
-                    <p>${f.role}</p>
-                    <div class="bio">
-                        <strong style="color:var(--brand-coral)">Background:</strong> ${f.background}<br><br>
-                        <strong style="color:var(--brand-coral)">Connection:</strong> ${f.personal_connection}
-                    </div>
-                </div>
-            `).join('');
-            
-            if (window.VanillaTilt) {
-                VanillaTilt.init(container.querySelectorAll(".founder-card"));
-            }
-        }
+  function setupControls() {
+    document.querySelector(".floating-home").addEventListener("click", () => { location.hash = "home"; });
+    document.querySelector(".floating-share").addEventListener("click", () => {
+      location.hash = "status-today";
+      setTimeout(() => {
+        const button = document.querySelector('[data-explore="status-today"]');
+        if (button.getAttribute("aria-expanded") !== "true") button.click();
+        else document.querySelector(".share-block").scrollIntoView({ behavior: "smooth" });
+      }, 350);
+    });
+
+    const motionToggle = document.querySelector(".motion-toggle");
+    const reduceByDefault = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.body.classList.toggle("reduce-motion", reduceByDefault);
+    motionToggle.setAttribute("aria-pressed", String(reduceByDefault));
+    motionToggle.textContent = reduceByDefault ? "Enable motion" : "Skip motion";
+    motionToggle.addEventListener("click", () => {
+      const reduced = document.body.classList.toggle("reduce-motion");
+      motionToggle.setAttribute("aria-pressed", String(reduced));
+      motionToggle.textContent = reduced ? "Enable motion" : "Skip motion";
+      if (!reduced && state.current !== "home") window.runChapterAnimation?.(state.current);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    setupExploreButtons();
+    setupControls();
+    window.setupQrCodes?.();
+    try {
+      state.content = await loadContent();
+      renderContent(state.content);
+    } catch {
+      document.querySelectorAll("[data-content-slot]").forEach((slot) => { slot.innerHTML = "<p>The case-study content could not be loaded. Refresh the page to try again.</p>"; });
     }
-}
-
-// Event Listeners
-function setupEventListeners() {
-    homeLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.hash = '';
-    });
-    
-    expandBtn.addEventListener('click', () => {
-        expandPrompt.classList.add('hidden');
-        deepDiveContainer.classList.remove('hidden');
-        
-        // Trigger slide up animation
-        setTimeout(() => {
-            deepDiveContainer.classList.add('visible');
-            
-            // Initialize charts after container is visible
-            if (window.Charts && state.currentChapter) {
-                window.Charts.initCharts(state.currentChapter.slug, state.content);
-            }
-        }, 50);
-    });
-    
-    // Share Modals
-    shareBtn.addEventListener('click', openShareModal);
-    modalCloseBtn.addEventListener('click', closeShareModal);
-    
-    document.getElementById('footer-copy-btn').addEventListener('click', copyLink);
-    document.getElementById('modal-copy-btn').addEventListener('click', copyLink);
-    
-    // Close modal on outside click
-    window.addEventListener('click', (e) => {
-        if (e.target === shareModal) {
-            closeShareModal();
-        }
-    });
-}
-
-function openShareModal() {
-    shareModal.classList.add('visible');
-    if(window.QRUtils) window.QRUtils.generateModalQR();
-}
-
-function closeShareModal() {
-    shareModal.classList.remove('visible');
-}
-
-function copyLink() {
-    navigator.clipboard.writeText(window.location.origin).then(() => {
-        alert('Link copied to clipboard!');
-    });
-}
-
-// Start
-document.addEventListener('DOMContentLoaded', init);
+    addEventListener("hashchange", route);
+    route();
+  });
+})();

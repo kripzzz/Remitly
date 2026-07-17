@@ -1,149 +1,19 @@
-window.Charts = {
-    instances: {},
+(() => {
+  const charts = {};
+  const colors = { purple: "#4b2e83", purpleDark: "#26134d", coral: "#ff6b52", orange: "#ff9d44", mint: "#bce7d2", grid: "rgba(37,24,67,.12)" };
+  const common = { responsive: true, maintainAspectRatio: true, animation: { duration: 900 }, plugins: { legend: { labels: { color: colors.purpleDark, font: { family: "DM Mono", size: 10 }, usePointStyle: true } } } };
 
-    initCharts: function(slug, content) {
-        // Destroy existing charts to prevent canvas reuse errors if navigating back
-        this.destroyCharts();
+  function create(id, config) {
+    if (!window.Chart || charts[id] || !document.getElementById(id)) return;
+    charts[id] = new Chart(document.getElementById(id), config);
+  }
 
-        if (slug === 'friction') {
-            this.renderFrictionChart();
-        } else if (slug === 'business_model') {
-            this.renderBusinessModelCharts(content.revenue_data);
-        } else if (slug === 'geography') {
-            this.renderScaleChart(content.revenue_data);
-        }
-    },
+  window.initCharts = (data, slug) => {
+    if (slug === "friction") create("costChart", { type: "bar", data: { labels: ["Traditional / offline", "Digital-native"], datasets: [{ label: "Illustrative cost range midpoint (%)", data: [8.5, 3], backgroundColor: [colors.coral, colors.mint], borderColor: [colors.purpleDark, colors.purpleDark], borderWidth: 2, borderRadius: 3 }] }, options: { ...common, scales: { y: { beginAtZero: true, max: 12, grid: { color: colors.grid }, ticks: { callback: (value) => `${value}%` } }, x: { grid: { display: false } } }, plugins: { ...common.plugins, legend: { display: false } } } });
+    if (slug === "business-model") create("revenueMixChart", { type: "doughnut", data: { labels: ["Transaction fees", "FX spread"], datasets: [{ data: [40, 60], backgroundColor: [colors.orange, colors.purple], borderColor: "#fffaf1", borderWidth: 6 }] }, options: { ...common, cutout: "62%" } });
 
-    destroyCharts: function() {
-        Object.keys(this.instances).forEach(key => {
-            if (this.instances[key]) {
-                this.instances[key].destroy();
-            }
-        });
-        this.instances = {};
-    },
-
-    renderFrictionChart: function() {
-        const ctx = document.getElementById('frictionChart');
-        if (!ctx) return;
-
-        this.instances['friction'] = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Traditional Operators', 'Digital-Native Challengers'],
-                datasets: [{
-                    label: 'Illustrative Cost to Send $200 (%)',
-                    data: [7.5, 1.5],
-                    backgroundColor: ['#6B7280', '#4B2E83'],
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    title: { display: true, text: 'Historical Remittance Industry Cost vs Digital Alternatives' }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: 'Percentage Cost (%)' }
-                    }
-                }
-            }
-        });
-    },
-
-    renderBusinessModelCharts: function(revenueData) {
-        const mixCtx = document.getElementById('revenueMixChart');
-        const growthCtx = document.getElementById('revenueGrowthChart');
-
-        if (mixCtx) {
-            this.instances['mix'] = new Chart(mixCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Transaction Fees (~40%)', 'FX Spread (~60%)'],
-                    datasets: [{
-                        data: [40, 60],
-                        backgroundColor: ['#F76B55', '#4B2E83'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Illustrative Historical Revenue Mix' }
-                    }
-                }
-            });
-        }
-
-        if (growthCtx && revenueData) {
-            // Filter out Q1 2026 for the annual bar chart to not skew scale
-            const annualData = revenueData.filter(d => d.fiscal_period.includes('FY'));
-            
-            this.instances['growth'] = new Chart(growthCtx, {
-                type: 'bar',
-                data: {
-                    labels: annualData.map(d => d.fiscal_period),
-                    datasets: [{
-                        label: 'Revenue (USD Millions)',
-                        data: annualData.map(d => d.revenue_usd_millions),
-                        backgroundColor: '#4B2E83',
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Annual Revenue Growth' }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Revenue (USD Millions)' }
-                        }
-                    }
-                }
-            });
-        }
-    },
-
-    renderScaleChart: function(revenueData) {
-        const ctx = document.getElementById('scaleChart');
-        if (!ctx) return;
-
-        // Using revenue as a proxy for scale growth line chart
-        const annualData = revenueData.filter(d => d.fiscal_period.includes('FY'));
-
-        this.instances['scale'] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: annualData.map(d => d.fiscal_period),
-                datasets: [{
-                    label: 'Revenue Proxy for Volume (USD Millions)',
-                    data: annualData.map(d => d.revenue_usd_millions),
-                    borderColor: '#F76B55',
-                    backgroundColor: 'rgba(247, 107, 85, 0.2)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    title: { display: true, text: 'Platform Scale Growth (Revenue Proxy)' }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-};
+    const revenue = data?.revenue || [];
+    if (slug === "business-model") create("revenueGrowthChart", { type: "bar", data: { labels: revenue.map((row) => row.fiscalPeriod), datasets: [{ label: "Revenue, USD millions", data: revenue.map((row) => row.revenueUsdMillions), backgroundColor: [colors.mint, colors.purple, colors.coral, colors.orange], borderColor: colors.purpleDark, borderWidth: 1, borderRadius: 3 }] }, options: { ...common, scales: { y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: (value) => `$${value}M` } }, x: { grid: { display: false } } }, plugins: { ...common.plugins, legend: { display: false } } } });
+    if (slug === "geography") create("customerChart", { type: "line", data: { labels: ["2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026"], datasets: [{ label: "Active customers (millions)", data: [1, 1.6, 2.8, 3.8, 5.9, 7.3, 8.6, 9.2], borderColor: colors.coral, backgroundColor: "rgba(255,107,82,.18)", fill: true, tension: .38, pointBackgroundColor: colors.purpleDark, pointRadius: 4 }] }, options: { ...common, scales: { y: { beginAtZero: true, grid: { color: colors.grid }, ticks: { callback: (value) => `${value}M` } }, x: { grid: { display: false } } } } });
+  };
+})();
