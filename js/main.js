@@ -117,7 +117,7 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", async () => {
+  document.addEventListener("DOMContentLoaded", async () => { if(window.VanillaTilt) { VanillaTilt.init(document.querySelectorAll(".chapter-card"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 }); }
     setupExploreButtons();
     setupControls();
     window.setupQrCodes?.();
@@ -172,3 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
