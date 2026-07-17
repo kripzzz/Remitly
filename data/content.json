@@ -1,0 +1,85 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "slug": "friction",
+      "title": "The Friction",
+      "order_index": 1,
+      "teaser_text": "Before mobile-first challengers arrived, sending money across borders ran through a patchwork of banks, wire services, and storefront agents.",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 12h20M12 2v20\"/><path d=\"m17 7-5-5-5 5M17 17l-5 5-5-5\"/></svg>",
+      "deep_dive_html": "<div class='deep-dive-content'><p>Before mobile-first challengers arrived, sending money across borders ran through a patchwork of banks, wire services, and storefront agents (Western Union, MoneyGram, informal hawala networks). For migrant workers, the experience was defined by five recurring pain points:</p><ul><li><strong>High, opaque fees</strong> — flat fees plus hidden markups on the exchange rate, often stacked together</li><li><strong>Poor exchange rates</strong> — customers frequently didn't know the real mid-market rate they were losing money against</li><li><strong>Slow settlement</strong> — transfers could take several days to reach a recipient</li><li><strong>Limited receiving options</strong> — many corridors to emerging-market countries had few or no reliable payout points</li><li><strong>No visibility or trust</strong> — senders had little to no way of tracking whether money had arrived, which matters enormously when a transfer is rent or medicine money</li></ul><p>This friction was felt most acutely by <strong>immigrants and migrant workers</strong> — people living and working in a wealthier country while supporting family back home. For many recipient households, these transfers weren't discretionary; they were a <strong>lifeline</strong> for food, school fees, and medical care. Remitly's own founding narrative traces directly back to this group: co-founder Matt Oppenheimer witnessed it firsthand while working in Nairobi, Kenya, where he saw how painful, expensive, and unreliable it was for people to send money to loved ones internationally — even to the point where fees and exchange-rate practices felt close to exploitative.</p></div><div class='chart-container'><canvas id='frictionChart'></canvas></div>"
+    },
+    {
+      "id": 2,
+      "slug": "founders",
+      "title": "The Founder(s)",
+      "order_index": 2,
+      "teaser_text": "Three founders, one shared vision: what if remittances didn't have to be broken?",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>",
+      "deep_dive_html": "<div class='deep-dive-content'><p>Remitly was founded in <strong>May 2011 in Seattle, Washington</strong>, by <strong>Matt Oppenheimer</strong>, <strong>Josh Hug</strong>, and <strong>Shivaas Gulati</strong> — originally under the name <strong>BeamIt Mobile</strong>, rebranded <strong>Remitly in August 2012</strong>.</p><p>The company incubated through <strong>Highway 12 Ventures</strong> (Idaho) and the <strong>Techstars Seattle</strong> accelerator before launching properly in Seattle — which is why Seattle remains Remitly's headquarters today.</p></div><div class='founder-cards' id='founderCardsContainer'></div>"
+    },
+    {
+      "id": 3,
+      "slug": "business_model",
+      "title": "The Business Model",
+      "order_index": 3,
+      "teaser_text": "Transaction fees and FX spread: the dual engines of a multi-billion dollar platform.",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 16v-8\"/><path d=\"M9.5 9.5 12 12l2.5-2.5\"/></svg>",
+      "deep_dive_html": "<div class='deep-dive-content'><p>Remitly makes money in <strong>two primary ways</strong>, plus a growing set of newer product lines:</p><ul><li><strong>Transaction fees</strong> — historically roughly <strong>40%</strong> of revenue.</li><li><strong>Foreign exchange (FX) spread</strong> — generally roughly <strong>60%</strong> of revenue, representing the markup between the wholesale exchange rate and the retail rate offered to customers.</li><li><strong>Newer ancillary revenue lines (2025–2026):</strong> Remitly One (membership), Remitly Flex (buy-now-pay-later), Remitly Wallet, and Remitly Business (B2B).</li></ul><p><strong>Who actually pays?</strong> Overwhelmingly, the <strong>sender</strong> — typically an individual immigrant or migrant worker living in a higher-income country — pays the transaction fee and absorbs the FX spread. The <strong>recipient</strong> generally receives the full converted amount with no separate fee.</p><p><strong>Financial scale:</strong> full-year 2024 revenue was ~$1.26 billion (+34% YoY); full-year 2025 revenue reached ~$1.6 billion; Q1 2026 revenue was $452.8 million. Remitly posted its first GAAP-profitable quarter since its 2021 IPO in Q1 2025. Gross margin runs around 60%.</p></div><div style='display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;'><div class='chart-container' style='width:45%;'><canvas id='revenueMixChart'></canvas></div><div class='chart-container' style='width:45%;'><canvas id='revenueGrowthChart'></canvas></div></div>"
+    },
+    {
+      "id": 4,
+      "slug": "geography",
+      "title": "Geography & Scale",
+      "order_index": 4,
+      "teaser_text": "From a niche mobile-first challenger in Seattle to a global payments network spanning six continents.",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/><path d=\"M2 12h20\"/></svg>",
+      "deep_dive_html": "<div class='deep-dive-content'><p>Remitly started as a small team in <strong>Seattle, Washington</strong>, in 2011. The company grew from a niche mobile-first challenger sending money from a handful of \"send\" countries into emerging-market \"receive\" countries, into a global cross-border payments network. Key scale milestones:</p><ul><li><strong>September 23, 2021:</strong> Remitly went public on the <strong>Nasdaq under ticker RELY</strong>.</li><li><strong>2025–2026:</strong> the platform serves <strong>more than 9 million active customers</strong>, reaches <strong>more than 175 countries</strong>, and supports transfers in <strong>more than 100 currencies</strong>.</li><li>The company employs roughly <strong>3,200 people</strong> globally (as of mid-2026).</li><li>Recent geographic expansion includes obtaining a <strong>UAE central bank (CBUAE) license</strong> and extending <strong>Remitly Business</strong> from the U.S. into the <strong>U.K. and Canada</strong>.</li></ul></div><div class='chart-container'><canvas id='scaleChart'></canvas></div>"
+    },
+    {
+      "id": 5,
+      "slug": "status_today",
+      "title": "Status Today",
+      "order_index": 5,
+      "teaser_text": "A publicly traded, profitable incumbent undergoing a classic leadership transition.",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 12h-4l-3 9L9 3l-3 9H2\"/></svg>",
+      "deep_dive_html": "<div class='deep-dive-content'><p><strong>Status: actively operating and publicly traded</strong> on the Nasdaq under <strong>RELY</strong>, with a market capitalization in the range of <strong>$4.5–4.7 billion</strong> as of mid-2026.</p><p>The most significant recent development is a <strong>leadership transition</strong>: in February 2026, <strong>Sebastian J. Gunningham</strong> was appointed <strong>CEO</strong>, succeeding co-founder <strong>Matt Oppenheimer</strong>, who moved into the role of <strong>Chairman of the Board</strong>. This is a classic \"founder-to-professional-CEO\" transition, common once a founder-led startup has scaled into a large, mature public company.</p><p>Under new leadership, Remitly reported <strong>record Q1 2026 revenue of $452.8 million</strong>, beating analyst consensus, alongside continued profitability. The company is also visibly diversifying beyond its original single remittance product into B2B, membership, and credit.</p></div><div class='kpi-cards'><div class='kpi-card'><span class='value'>$4.6B</span><span class='label'>Market Cap (Mid-2026)</span></div><div class='kpi-card'><span class='value'>9M+</span><span class='label'>Active Customers</span></div><div class='kpi-card'><span class='value'>175+</span><span class='label'>Countries Reached</span></div><div class='kpi-card'><span class='value'>$1.6B</span><span class='label'>Est. 2025 Revenue</span></div></div>"
+    }
+  ],
+  "founders": [
+    {
+      "id": 1,
+      "name": "Matt Oppenheimer",
+      "role": "Co-founder, CEO (2011–2026), Chairman (Present)",
+      "background": "Dartmouth College (B.A.), Harvard Business School (MBA). Barclays (2009–2011) leading mobile banking in Nairobi, Kenya.",
+      "personal_connection": "Living in Nairobi, he personally experienced and observed how painful, slow, and expensive it was for people to move money across borders. He was told to 'fall in love with a problem you want to solve, not the solution.'"
+    },
+    {
+      "id": 2,
+      "name": "Josh Hug",
+      "role": "Co-founder, COO",
+      "background": "Co-founder/CEO of Shelfari (acquired by Amazon in 2008). Joined Remitly initially as a Techstars mentor.",
+      "personal_connection": "Family living abroad meant he had firsthand experience with the difficulty of cross-border money movement."
+    },
+    {
+      "id": 3,
+      "name": "Shivaas Gulati",
+      "role": "Co-founder, Head of Engineering",
+      "background": "Technical co-founder.",
+      "personal_connection": "Connected with Matt before Techstars to help turn the idea into a working mobile-first product."
+    }
+  ],
+  "revenue_data": [
+    { "id": 1, "fiscal_period": "FY2023", "revenue_usd_millions": 944, "yoy_growth_pct": 44, "source": "Public Filings" },
+    { "id": 2, "fiscal_period": "FY2024", "revenue_usd_millions": 1260, "yoy_growth_pct": 34, "source": "Public Filings" },
+    { "id": 3, "fiscal_period": "FY2025", "revenue_usd_millions": 1600, "yoy_growth_pct": 27, "source": "Public Filings" },
+    { "id": 4, "fiscal_period": "Q1 2026", "revenue_usd_millions": 452.8, "yoy_growth_pct": null, "source": "Public Filings" }
+  ],
+  "milestones": [
+    { "id": 1, "year": 2011, "label": "Founded", "description": "BeamIt Mobile founded in Seattle.", "chapter_slug": "founders" },
+    { "id": 2, "year": 2012, "label": "Rebrand", "description": "Rebranded to Remitly.", "chapter_slug": "founders" },
+    { "id": 3, "year": 2021, "label": "IPO", "description": "Goes public on Nasdaq (RELY).", "chapter_slug": "geography" },
+    { "id": 4, "year": 2025, "label": "Profitability", "description": "First GAAP profitable quarter in Q1 2025.", "chapter_slug": "business_model" },
+    { "id": 5, "year": 2026, "label": "New CEO", "description": "Sebastian J. Gunningham appointed CEO.", "chapter_slug": "status_today" }
+  ]
+}
