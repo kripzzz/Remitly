@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSend = document.getElementById('btn-send-money');
     const methodSelect = document.getElementById('game-method');
     const amountInput = document.getElementById('game-amount');
+    const fromSelect = document.getElementById('game-from');
     const countrySelect = document.getElementById('game-country');
     const statusText = document.getElementById('game-status');
     const feesBar = document.getElementById('game-fees');
@@ -151,13 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             let amount = parseFloat(amountInput.value);
             if (isNaN(amount) || amount <= 0) amount = 200;
 
+            const fromName = fromSelect ? fromSelect.options[fromSelect.selectedIndex].text : 'USA';
             const countryName = countrySelect.options[countrySelect.selectedIndex].text;
             
             // 9% traditional vs 1.5% Remitly
             const tradFeeRate = 0.09;
             const remitlyFeeRate = 0.015;
             
-            statusText.innerText = 'Sending to ' + countryName + '...';
+            statusText.innerText = 'Sending from ' + fromName + ' to ' + countryName + '...';
             feesBar.style.width = '0%';
             feesBar.innerText = '';
             recipientBar.style.width = '100%';
@@ -169,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(method === 'traditional') {
                     const fee = amount * tradFeeRate;
                     const received = amount - fee;
-                    statusText.innerText = `Transfer Complete (Traditional to ${countryName})`;
+                    statusText.innerText = `Transfer Complete (${fromName} to ${countryName})`;
                     feesBar.style.width = '9%';
                     feesBar.innerText = `-$${fee.toFixed(2)}`;
                     recipientBar.style.width = '91%';
