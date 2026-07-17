@@ -31,7 +31,7 @@
     founderGrid.innerHTML = data.founders.map((founder) => {
       const initials = founder.name.split(" ").map((part) => part[0]).join("");
       return `<article class="founder-card" tabindex="0" role="button" aria-label="Flip ${founder.name} card" aria-pressed="false">
-        <div class="founder-face founder-front"><span class="initials">${initials}</span><h3>${founder.name}</h3><p>${founder.role}</p><small>Tap to flip ↻</small></div>
+        <div class="founder-face founder-front"><img src="assets/img/${founder.name.split(" ")[0].toLowerCase()}.png" class="founder-image" alt="${founder.name}"><h3>${founder.name}</h3><p>${founder.role}</p><small>Tap to flip ↻</small></div>
         <div class="founder-face founder-back"><p class="eyebrow">Background</p><p>${founder.background}</p><p class="eyebrow">Connection to the problem</p><p>${founder.personalConnection}</p><small>Tap to return ↻</small></div>
       </article>`;
     }).join("");
@@ -131,3 +131,44 @@
     route();
   });
 })();
+
+
+// SIMULATION GAME LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+    const btnSend = document.getElementById('btn-send-money');
+    const methodSelect = document.getElementById('game-method');
+    const statusText = document.getElementById('game-status');
+    const feesBar = document.getElementById('game-fees');
+    const recipientBar = document.getElementById('game-recipient');
+    const timeValue = document.getElementById('game-time-value');
+
+    if(btnSend) {
+        btnSend.addEventListener('click', () => {
+            const method = methodSelect.value;
+            statusText.innerText = 'Sending ...';
+            feesBar.style.width = '0%';
+            feesBar.innerText = '';
+            recipientBar.style.width = '100%';
+            recipientBar.innerText = 'Sending...';
+            timeValue.innerText = '0 hours';
+            
+            setTimeout(() => {
+                if(method === 'traditional') {
+                    statusText.innerText = 'Transfer Complete (Traditional)';
+                    feesBar.style.width = '9%';
+                    feesBar.innerText = '-';
+                    recipientBar.style.width = '91%';
+                    recipientBar.innerText = 'Received: ';
+                    timeValue.innerText = '72 hours (3 Days)';
+                } else {
+                    statusText.innerText = 'Transfer Complete (Digital/Remitly)';
+                    feesBar.style.width = '1.5%';
+                    feesBar.innerText = '-';
+                    recipientBar.style.width = '98.5%';
+                    recipientBar.innerText = 'Received: ';
+                    timeValue.innerText = 'Minutes';
+                }
+            }, 600);
+        });
+    }
+});

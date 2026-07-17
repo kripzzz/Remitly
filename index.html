@@ -113,7 +113,7 @@
           <div class="editorial-copy"><p class="kicker">Why this mattered</p><div data-content-slot="friction"></div>
             <ul class="pain-list"><li><b>Opaque cost</b><span>Flat fees and exchange-rate markups stacked together.</span></li><li><b>Slow settlement</b><span>Critical support could take days to arrive.</span></li><li><b>Thin access</b><span>Reliable payout locations varied sharply by corridor.</span></li><li><b>Low trust</b><span>Senders often could not see where the money was.</span></li></ul>
           </div>
-          <figure class="chart-panel"><figcaption><span>Illustrative cost comparison</span><b>Share of a $200 transfer</b></figcaption><canvas id="costChart"></canvas><small>Industry-general teaching ranges, not Remitly-specific pricing.</small></figure>
+          <figure class="chart-panel game-panel"><figcaption><span>Interactive Simulation</span><b>Send $200 Home</b></figcaption><div class="game-container"><div class="game-controls"><label>Choose Method:</label><select id="game-method"><option value="traditional">Traditional (Storefront)</option><option value="digital">Digital (Remitly)</option></select><button id="btn-send-money" style="margin-top:10px; padding:8px 15px; background:var(--coral); border:none; border-radius:4px; color:white; font-weight:bold; cursor:pointer;">Simulate Transfer</button></div><div class="game-display" style="margin-top:20px; padding:15px; background:rgba(0,0,0,0.1); border-radius:8px;"><div class="game-status" id="game-status" style="font-weight:bold; margin-bottom:10px;">Waiting to send...</div><div class="game-bar-container" style="display:flex; height:30px; border-radius:4px; overflow:hidden; margin-bottom:10px; background:var(--ink);"><div class="game-bar fees" id="game-fees" style="width: 0%; background:var(--orange); display:flex; align-items:center; justify-content:center; font-size:12px; color:white; transition:width 1s ease;"></div><div class="game-bar recipient" id="game-recipient" style="width: 100%; background:var(--purple); display:flex; align-items:center; justify-content:center; font-size:12px; color:white; transition:width 1s ease;">Received: $200</div></div><div class="game-time">Time Elapsed: <span id="game-time-value" style="color:var(--coral); font-weight:bold;">0 hours</span></div></div></div><small>Try both methods to see why solving this problem matters.</small></figure>
         </div>
       </section>
 
@@ -202,3 +202,4 @@
     </footer>
   </body>
 </html>
+
