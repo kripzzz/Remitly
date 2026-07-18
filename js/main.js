@@ -170,6 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 if(method === 'traditional') {
                     const fee = amount * tradFeeRate;
+                    const fxMarkup = fee * 0.6;
+                    const transferFee = fee * 0.4;
                     const received = amount - fee;
                     statusText.innerText = `Transfer Complete (${fromName} to ${countryName})`;
                     feesBar.style.width = '9%';
@@ -178,9 +180,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     recipientBar.innerText = `Received: $${received.toFixed(2)}`;
                     timeValue.innerText = '72 hours (3 Days)';
                     savingsBox.style.display = 'block';
-                    savingsBox.innerHTML = `💸 Traditional fees are eating <strong>$${fee.toFixed(2)}</strong>! Remitly could save you <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong> and deliver in minutes.`;
+                    savingsBox.innerHTML = `💸 <strong>Fee Breakdown:</strong> $${transferFee.toFixed(2)} (Transfer Fee) + $${fxMarkup.toFixed(2)} (Hidden FX Markup). Traditional methods are eating <strong>$${fee.toFixed(2)}</strong>! Remitly could save you <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong>.`;
                 } else {
                     const fee = amount * remitlyFeeRate;
+                    const fxMarkup = fee * 0.6; // Assuming 60% FX spread based on chart
+                    const transferFee = fee * 0.4; // Assuming 40% transaction fee based on chart
                     const received = amount - fee;
                     statusText.innerText = `Transfer Complete (Remitly to ${countryName})`;
                     feesBar.style.width = '1.5%';
@@ -189,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     recipientBar.innerText = `Received: $${received.toFixed(2)}`;
                     timeValue.innerText = 'Minutes';
                     savingsBox.style.display = 'block';
-                    savingsBox.innerHTML = `🚀 <strong>Remitly Magic!</strong> You saved <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong> and <strong>almost 3 days</strong> compared to traditional methods!`;
+                    savingsBox.innerHTML = `🚀 <strong>Remitly Magic!</strong> <strong>Fee Breakdown:</strong> $${transferFee.toFixed(2)} (Transfer Fee) + $${fxMarkup.toFixed(2)} (FX Spread). You saved <strong>$${((tradFeeRate - remitlyFeeRate) * amount).toFixed(2)}</strong> and <strong>almost 3 days</strong>!`;
                 }
             }, 600);
         });
