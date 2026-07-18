@@ -203,6 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 els.forEach(el => {
                     const isDecimal = el.hasAttribute('data-count-decimal');
                     const target = parseFloat(isDecimal ? el.getAttribute('data-count-decimal') : el.getAttribute('data-count'));
+                    
+                    const originalText = el.innerText;
+                    const prefix = originalText.replace(/[0-9.].*/, '');
+                    const suffix = originalText.replace(/.*?[0-9.]+/, '');
+                    
                     const duration = 1500;
                     const stepTime = 30;
                     const steps = duration / stepTime;
@@ -216,9 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             clearInterval(timer);
                             kpiObserver.unobserve(entry.target);
                         }
-                        // Keep any non-numeric text like '$' or 'M+' intact in the original HTML, just replace the inner text of the span? 
-                        // Actually, the span ONLY contains the number in our HTML setup (e.g. <span>0</span>)
-                        el.innerText = isDecimal ? current.toFixed(1) : Math.floor(current);
+                        const numStr = isDecimal ? current.toFixed(1) : Math.floor(current);
+                        el.innerText = prefix + numStr + suffix;
                     }, stepTime);
                 });
             }
